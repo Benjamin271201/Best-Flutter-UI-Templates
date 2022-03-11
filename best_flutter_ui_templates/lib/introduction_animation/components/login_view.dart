@@ -1,8 +1,7 @@
+import 'package:best_flutter_ui_templates/fitness_app/fitness_app_home_screen.dart';
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register_view.dart';
-import 'package:best_flutter_ui_templates/navigation_home_screen.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -46,6 +45,7 @@ class _LoginViewState extends State<LoginView> {
                   padding: const EdgeInsets.all(10),
                   child: TextField(
                     controller: passwordController,
+                    obscureText: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
@@ -120,14 +120,19 @@ class _LoginViewState extends State<LoginView> {
   }
   void _loginClick() async{
     // TODO: code for login func
-    var user = await HttpService().login(usernameController.text, passwordController.text);
-    if(user != null) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => NavigationHomeScreen()));
+    if(usernameController.text.isNotEmpty && passwordController.text.isNotEmpty){
+      var user = await HttpService().login(usernameController.text, passwordController.text);
+      if(user != null) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FitnessAppHomeScreen(user: user)));
+      } else{
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Username or Password is incorrect")));
+      }
     } else{
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Username or Password is incorrect")));
+          .showSnackBar(SnackBar(content: Text("Please fill in all field")));
     }
   }
 }

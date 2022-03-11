@@ -21,4 +21,21 @@ class HttpService {
       return null;
     }
   }
+
+  Future<User?> register(String username, String password, bool gender) async{
+    var client = http.Client();
+    String body = jsonEncode({
+      "username" : username,
+      "uPassword" : password,
+      "gender" : gender
+    });
+    var res = await client.post(Uri.parse(baseUrl+"Users"),headers: {'Content-Type': 'application/json'},body: body);
+    if(res.statusCode == 201){
+      var json = res.body;
+      return userFromJson(json);
+    }
+    else{
+      return null;
+    }
+  }
 }

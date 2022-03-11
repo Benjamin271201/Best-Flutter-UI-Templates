@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../../fitness_app/fitness_app_home_screen.dart';
+import '../../service/HttpService.dart';
 import 'login_view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -7,7 +10,7 @@ class RegisterView extends StatefulWidget {
   _RegisterViewState createState() => _RegisterViewState();
 }
 
-enum Gender {Male, Female}
+enum Gender { Male, Female }
 
 class _RegisterViewState extends State<RegisterView> {
   TextEditingController usernameController = TextEditingController();
@@ -36,6 +39,8 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.all(10),
                   child: TextField(
                     controller: usernameController,
+                    maxLength: 10,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Username',
@@ -46,6 +51,9 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.all(10),
                   child: TextField(
                     controller: passwordController,
+                    maxLength: 10,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    obscureText: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
@@ -141,9 +149,47 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  void _signUpClick() {
-    //TODO: func register
-    Navigator.pop(context);
+  void _signUpClick() async {
+    if (usernameController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
+      if(usernameController.text.length < 4){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Username need to be at least 4 characters")));
+        return;
+      }
+      if(passwordController.text.length < 4){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Password need to be at least 4 characters")));
+        return;
+      }
+      bool g;
+      switch (_gender) {
+        case Gender.Male:
+          {
+            g = true;
+            break;
+          }
+        default:
+          {
+            g = false;
+            break;
+          }
+      }
+      var user = await HttpService()
+          .register(usernameController.text, passwordController.text, g);
+      if (user != null) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FitnessAppHomeScreen(user: user)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Username or Password is incorrect")));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Please fill in all field")));
+    }
   }
 
   void _loginClick() {

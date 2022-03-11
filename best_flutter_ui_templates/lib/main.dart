@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:best_flutter_ui_templates/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'navigation_home_screen.dart';
 import 'introduction_animation/introduction_animation_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
