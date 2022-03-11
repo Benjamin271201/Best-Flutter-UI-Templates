@@ -142,6 +142,7 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _signUpClick() {
+    //TODO: func register
     Navigator.pop(context);
   }
 

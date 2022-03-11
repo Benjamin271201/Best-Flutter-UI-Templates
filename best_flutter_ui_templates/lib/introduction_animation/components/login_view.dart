@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register_view.dart';
+import 'package:best_flutter_ui_templates/navigation_home_screen.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -116,6 +117,7 @@ class _LoginViewState extends State<LoginView> {
   }
   void _loginClick() {
     // TODO: code for login func
-    Navigator.pop(context);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NavigationHomeScreen()));
   }
 }
