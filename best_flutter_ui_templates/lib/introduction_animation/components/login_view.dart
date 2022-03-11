@@ -1,3 +1,4 @@
+import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register_view.dart';
@@ -37,6 +38,7 @@ class _LoginViewState extends State<LoginView> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Username',
+                      suffixIcon: Icon(Icons.abc),
                     ),
                   ),
                 ),
@@ -47,6 +49,7 @@ class _LoginViewState extends State<LoginView> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
+                      suffixIcon: Icon(Icons.password),
                     ),
                   ),
                 ),
@@ -115,9 +118,16 @@ class _LoginViewState extends State<LoginView> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => RegisterView()));
   }
-  void _loginClick() {
+  void _loginClick() async{
     // TODO: code for login func
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NavigationHomeScreen()));
+    var user = await HttpService().login(usernameController.text, passwordController.text);
+    if(user != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NavigationHomeScreen()));
+    } else{
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Username or Password is incorrect")));
+    }
   }
 }
