@@ -1,6 +1,7 @@
 import 'package:best_flutter_ui_templates/fitness_app/fitness_app_home_screen.dart';
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'register_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -11,11 +12,12 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _isInAsyncCall = false;
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: Container(
+      body: ModalProgressHUD(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(bottom: 100),
@@ -110,6 +112,9 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
         ),
+        inAsyncCall: _isInAsyncCall,
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(),
       ),
     );
   }
@@ -119,18 +124,30 @@ class _LoginViewState extends State<LoginView> {
         context, MaterialPageRoute(builder: (context) => RegisterView()));
   }
   void _loginClick() async{
-    // TODO: code for login func
+    FocusScope.of(context).requestFocus(new FocusNode());
+
+    // start the modal progress HUD
+    setState(() {
+      _isInAsyncCall = true;
+    });
     if(usernameController.text.isNotEmpty && passwordController.text.isNotEmpty){
       var user = await HttpService().login(usernameController.text, passwordController.text);
       if(user != null) {
-        Navigator.push(
+        Navigator.of(context).pop();
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => FitnessAppHomeScreen(user: user)));
       } else{
+        setState(() {
+          _isInAsyncCall = false;
+        });
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Username or Password is incorrect")));
       }
     } else{
+      setState(() {
+        _isInAsyncCall = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Please fill in all field")));
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../../fitness_app/fitness_app_home_screen.dart';
 import '../../service/HttpService.dart';
 import 'login_view.dart';
@@ -16,11 +17,17 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   Gender? _gender = Gender.Male;
+  bool _isInAsyncCall = false;
+  bool usernameError = false, passwordError = false;
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: Container(
+      body: ModalProgressHUD(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(bottom: 100),
@@ -41,9 +48,10 @@ class _RegisterViewState extends State<RegisterView> {
                     controller: usernameController,
                     maxLength: 10,
                     maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Username',
+                      errorText: usernameError?"Username need to be at least 4 characters":null,
                     ),
                   ),
                 ),
@@ -54,9 +62,10 @@ class _RegisterViewState extends State<RegisterView> {
                     maxLength: 10,
                     maxLengthEnforcement: MaxLengthEnforcement.enforced,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
+                      errorText: passwordError?"Password need to be at least 4 characters":null
                     ),
                   ),
                 ),
@@ -145,21 +154,34 @@ class _RegisterViewState extends State<RegisterView> {
             ),
           ),
         ),
+        inAsyncCall: _isInAsyncCall,
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(),
       ),
     );
   }
 
   void _signUpClick() async {
+    FocusScope.of(context).requestFocus(new FocusNode());
+
+    // start the modal progress HUD
+    setState(() {
+      _isInAsyncCall = true;
+    });
     if (usernameController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
       if(usernameController.text.length < 4){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Username need to be at least 4 characters")));
+        setState(() {
+          _isInAsyncCall = false;
+          usernameError = true;
+        });
         return;
       }
       if(passwordController.text.length < 4){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Password need to be at least 4 characters")));
+        setState(() {
+          _isInAsyncCall = false;
+          passwordError = true;
+        });
         return;
       }
       bool g;
@@ -178,8 +200,8 @@ class _RegisterViewState extends State<RegisterView> {
       var user = await HttpService()
           .register(usernameController.text, passwordController.text, g);
       if (user != null) {
-        Navigator.push(
-            context,
+        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => FitnessAppHomeScreen(user: user)));
       } else {
@@ -187,6 +209,9 @@ class _RegisterViewState extends State<RegisterView> {
             SnackBar(content: Text("Username or Password is incorrect")));
       }
     } else {
+      setState(() {
+        _isInAsyncCall = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Please fill in all field")));
     }

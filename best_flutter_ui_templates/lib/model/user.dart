@@ -10,14 +10,14 @@ String userToJson(User data) => json.encode(data.toJson());
 
 class User {
   User({
-    this.id,
-    this.username,
-    this.gender,
+    required this.id,
+    required this.username,
+    required this.gender,
   });
 
-  int? id;
-  String? username;
-  bool? gender;
+  int id;
+  String username;
+  bool gender;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json["id"],
