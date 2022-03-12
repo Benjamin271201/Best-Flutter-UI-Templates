@@ -67,7 +67,6 @@ class _DiaryScreenState extends State<DiaryScreen>
     listViews.add(
       TitleView(
         titleTxt: 'Diary',
-        subTxt: 'Details',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
@@ -83,11 +82,15 @@ class _DiaryScreenState extends State<DiaryScreen>
   }
 
   getDiary() async {
-    listSleep = await HttpService().getSleepDiaryByMonth(6, 5, 2022);
+    listSleep = await HttpService().getSleepDiaryByMonth(6, 3, 2022);
     if (listSleep != null)
       setState(() {
         isLoaded = true;
       });
+  }
+
+  void _showSleepDetail() {
+    //TODO: show sleep detail code
   }
 
   @override
@@ -98,8 +101,8 @@ class _DiaryScreenState extends State<DiaryScreen>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            getMainListViewUI(),
             getAppBarUI(),
+            getMainListViewUI(),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
             )
@@ -116,21 +119,25 @@ class _DiaryScreenState extends State<DiaryScreen>
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-          return ListView.builder(
-            controller: scrollController,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
-            ),
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController?.forward();
-              return listViews[index];
-            },
-          );
+          return Visibility(
+              visible: isLoaded,
+              child: ListView.builder(
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                  top: AppBar().preferredSize.height +
+                      MediaQuery.of(context).padding.top +
+                      24,
+                  bottom: 62 + MediaQuery.of(context).padding.bottom,
+                ),
+                itemCount: listSleep?.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (BuildContext context, int index) {
+                  final item = listSleep![index];
+                  return InkWell(
+                      onTap: _showSleepDetail,
+                      child: ListTile(title: Text(item.mood)));
+                },
+              ));
         }
       },
     );
@@ -248,17 +255,6 @@ class _DiaryScreenState extends State<DiaryScreen>
           ],
         ),
       ),
-      Visibility(
-          visible: isLoaded,
-          child: ListView.builder(
-            itemCount: listSleep?.length,
-            itemBuilder: (context, index) {
-              final item = listSleep![index];
-              return ListTile(
-                title: Text(item.mood),
-              );
-            },
-          ))
     ]);
   }
 }
