@@ -1,7 +1,7 @@
-import 'package:best_flutter_ui_templates/fitness_app/fitness_app_home_screen.dart';
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:flutter/material.dart';
 import 'register_view.dart';
+import 'package:best_flutter_ui_templates/home/home_screen.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -119,13 +119,12 @@ class _LoginViewState extends State<LoginView> {
         context, MaterialPageRoute(builder: (context) => RegisterView()));
   }
   void _loginClick() async{
-    // TODO: code for login func
     if(usernameController.text.isNotEmpty && passwordController.text.isNotEmpty){
       var user = await HttpService().login(usernameController.text, passwordController.text);
       if(user != null) {
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FitnessAppHomeScreen(user: user)));
+            MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
       } else{
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Username or Password is incorrect")));

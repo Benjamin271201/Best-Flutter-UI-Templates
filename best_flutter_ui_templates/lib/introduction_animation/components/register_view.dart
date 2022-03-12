@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../fitness_app/fitness_app_home_screen.dart';
+import 'package:best_flutter_ui_templates/home/home_screen.dart';
 import '../../service/HttpService.dart';
 import 'login_view.dart';
 
@@ -181,7 +181,7 @@ class _RegisterViewState extends State<RegisterView> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => FitnessAppHomeScreen(user: user)));
+                builder: (context) => HomeScreen(user: user)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Username or Password is incorrect")));

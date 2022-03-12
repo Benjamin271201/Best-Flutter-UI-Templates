@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:best_flutter_ui_templates/home/stats/mood.dart';
 import 'package:best_flutter_ui_templates/model/user.dart';
 import 'package:http/http.dart' as http;
+
+import '../home/diary/sleep.dart';
 
 class HttpService {
   final String baseUrl = "https://sleeptracker.azurewebsites.net/api/";
@@ -36,6 +39,43 @@ class HttpService {
     }
     else{
       return null;
+    }
+  }
+
+  // Future<List<Mood>> getMoodStatByMonth(int month, int year) async {
+  //   var client = http.Client();
+  //   final body = {
+  //     "month" : month,
+  //     "year" : year
+  //   };
+  //   final uri = Uri.http(baseUrl, '/Sleeps', body);
+  //   var res = await client.get(uri, headers: {'Content-Type': 'application/json'});
+  //   if (res.statusCode == 201){
+  //     var json = res.body;
+  //     return moodFromJson(json);
+  //   }
+  //   else{
+  //     throw new Exception("Error");
+  //   }
+  // }
+
+  Future<List<Sleep>> getSleepDiaryByMonth(int userId, int month, int year) async {
+    var client = http.Client();
+    final body = {
+      'id' : 6,
+      'month' : month,
+      'year' : year
+    };
+    final uri = Uri.http(baseUrl, '/Sleeps/user', body);
+    var res = await http.get(uri);
+    if (res.statusCode == 200){
+       List<Sleep> list = (json.decode(res.body) as List)
+           .map((data) => Sleep.fromJson(data))
+           .toList();
+       return list;
+    }
+    else{
+      throw new Exception("Error");
     }
   }
 }
