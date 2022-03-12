@@ -1,10 +1,12 @@
+// To parse this JSON data, do
+//
+//     final sleep = sleepFromJson(jsonString);
+
 import 'dart:convert';
 
-import 'package:best_flutter_ui_templates/home/stats/mood_chart_data.dart';
+List<Sleep> sleepFromJson(String str) => List<Sleep>.from(json.decode(str).map((x) => Sleep.fromJson(x)));
 
-Sleep sleepFromJson(String str) => Sleep.fromJson(json.decode(str));
-
-// String sleepToJson(Sleep data) => json.encode(data.toJson());
+String sleepToJson(List<Sleep> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Sleep {
   Sleep({
@@ -14,30 +16,34 @@ class Sleep {
     required this.sleepDuration,
     required this.mood,
     required this.startSleep,
-    required this.endSleep
+    required this.endSleep,
   });
 
   int id;
   String slDescription;
-  Data sleepDate;
+  DateTime sleepDate;
   int sleepDuration;
   String mood;
   String startSleep;
   String endSleep;
 
-  factory Sleep.fromJson(Map<String, dynamic> json) => Sleep (
-      id: json["id"],
-      slDescription: json["slDescription"],
-      sleepDate: json["sleepDate"],
-      sleepDuration: json["sleepDuration"],
-      mood: json["mood"],
-      startSleep: json["startSleep"],
-      endSleep: json["endSleep"]
+  factory Sleep.fromJson(Map<String, dynamic> json) => Sleep(
+    id: json["id"],
+    slDescription: json["slDescription"],
+    sleepDate: DateTime.parse(json["sleepDate"]),
+    sleepDuration: json["sleepDuration"],
+    mood: json["mood"],
+    startSleep: json["startSleep"],
+    endSleep: json["endSleep"],
   );
 
-  // Map<String, dynamic> toJson() => {
-  //   "id": id,
-  //   "name": name,
-  //   "count": count
-  // };
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "slDescription": slDescription,
+    "sleepDate": sleepDate.toIso8601String(),
+    "sleepDuration": sleepDuration,
+    "mood": mood,
+    "startSleep": startSleep,
+    "endSleep": endSleep,
+  };
 }
