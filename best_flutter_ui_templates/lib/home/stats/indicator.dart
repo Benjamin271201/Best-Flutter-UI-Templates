@@ -1,3 +1,4 @@
+import 'package:best_flutter_ui_templates/home/home_theme.dart';
 import 'package:flutter/material.dart';
 
 class Indicator extends StatelessWidget {
@@ -32,7 +33,7 @@ class Indicator extends StatelessWidget {
         Text(
           name,
           style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
+              fontSize: 16, fontWeight: FontWeight.bold, color: textColor, fontFamily: HomeTheme.fontName),
         )
       ],
     );

@@ -3,6 +3,7 @@ import 'package:best_flutter_ui_templates/home/diary/sleep.dart';
 import 'package:best_flutter_ui_templates/home/home_theme.dart';
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryScreen extends StatefulWidget {
   const DiaryScreen({Key? key, this.animationController}) : super(key: key);
@@ -17,6 +18,8 @@ class _DiaryScreenState extends State<DiaryScreen>
   Animation<double>? topBarAnimation;
 
   List<Sleep>? listSleep;
+  String? username;
+  int userId = 0;
   var isLoaded = false;
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
@@ -24,6 +27,7 @@ class _DiaryScreenState extends State<DiaryScreen>
 
   @override
   void initState() {
+    getUser();
     getDiary();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
@@ -76,12 +80,23 @@ class _DiaryScreenState extends State<DiaryScreen>
     return true;
   }
 
+  Future<bool> getUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getInt("id")!;
+      username = prefs.getString("username");
+    });
+    return true;
+  }
+
   getDiary() async {
-    listSleep = await HttpService().getSleepDiaryByMonth(6, 3, 2022);
-    if (listSleep != null)
-      setState(() {
-        isLoaded = true;
-      });
+    if (await getUser()) {
+      listSleep = await HttpService().getSleepDiaryByMonth(userId, 3, 2022);
+      if (listSleep != null)
+        setState(() {
+          isLoaded = true;
+        });
+    }
   }
 
   void _showSleepDetail() {

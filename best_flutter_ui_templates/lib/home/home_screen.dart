@@ -3,13 +3,13 @@
 import 'package:best_flutter_ui_templates/fitness_app/training/profile_screen.dart';
 import 'package:best_flutter_ui_templates/fitness_app/training/training_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'bottom_bar_view.dart';
 import 'home_theme.dart';
 import 'diary/diary_screen.dart';
 import 'stats/stats_screen.dart';
 import 'models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/model/user.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -23,13 +23,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   AnimationController? animationController;
   final User user;
-  final storage = new FlutterSecureStorage();
-  String? key, value;
+  String? username;
+  int? id;
 
   _HomeScreenState(this.user) {
-    key = user.id.toString();
-    value = user.username;
-    storage.write(key: "username", value: value);
+    id = user.id;
+    username = user.username;
   }
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
@@ -38,8 +37,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     color: HomeTheme.background,
   );
 
+  setUsername(String username) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("username", "benjamin");
+  }
+
+  setUserId(int id) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("id", 6);
+  }
+
   @override
   void initState() {
+    setUsername(username!);
+    setUserId(id!);
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
     });

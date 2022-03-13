@@ -7,7 +7,9 @@ import 'package:best_flutter_ui_templates/home/stats/mood.dart';
 import 'package:best_flutter_ui_templates/home/ui/add_sleep.dart';
 import 'package:best_flutter_ui_templates/model/moodSleep.dart';
 import 'package:best_flutter_ui_templates/model/user.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../home/diary/sleep.dart';
 
@@ -47,22 +49,36 @@ class HttpService {
     }
   }
 
-  // Future<List<Mood>> getMoodStatByMonth(int userId, int month, int year) async {
-  //   var client = http.Client();
-  //   final body = {
-  //     "month" : month,
-  //     "year" : year
-  //   };
-  //   final uri = Uri.http(baseUrl, '/Moods/summary', body);
-  //   var res = await client.get(uri, headers: {'Content-Type': 'application/json'});
-  //   if (res.statusCode == 201){
-  //     var json = res.body;
-  //     return moodFromJson(json);
-  //   }
-  //   else{
-  //     throw new Exception("Error");
-  //   }
-  // }
+  Future<List<Mood>> getMoodStatByMonth(int userId, int month, int year) async {
+    var client = http.Client();
+    final queryParameters = {
+      'userId' : userId.toString(),
+      "month" : month.toString(),
+      "year" : year.toString()
+    };
+    final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Moods/summary', queryParameters);
+    var res = await client.get(uri);
+    if (res.statusCode == 200){
+      var moodStatus = res.body;
+      var moodStatusStr = json.decode(moodStatus).toString();
+      moodStatusStr = moodStatusStr.substring(1, moodStatusStr.length-1);
+      List<String> moodStatusStrList = moodStatusStr.split(", ").toList();
+      List<Mood> moodStatusList = [];
+      for (int i = 0; i<moodStatusStrList.length; i++) {
+        Mood mood = new Mood(
+            id: i,
+            name: moodStatusStrList[i].split(":")[0],
+            count: int.parse(moodStatusStrList[i].split(":")[1])
+        );
+        moodStatusList.add(mood);
+      }
+      print(moodStatusList);
+      return moodStatusList;
+    }
+    else{
+      throw new Exception("Error");
+    }
+  }
 
   Future<List<Sleep>> getSleepDiaryByMonth(int userId, int month, int year) async {
     var client = http.Client();

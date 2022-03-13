@@ -87,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't an account yet? ",
+                        "Don't have an account yet? ",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,

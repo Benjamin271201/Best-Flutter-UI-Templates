@@ -1,21 +1,16 @@
-// ignore_for_file: unused_import
-
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/body_measurement.dart';
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/glass_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/mediterranean_diet_view.dart';
 import 'package:best_flutter_ui_templates/home/ui/title_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/fitness_app_theme.dart';
-import 'package:best_flutter_ui_templates/fitness_app/my_diary/meals_list_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/my_diary/water_view.dart';
 import 'package:best_flutter_ui_templates/home/stats/mood_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:best_flutter_ui_templates/model/user.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../home_theme.dart';
 import 'mood_chart.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class StatsScreen extends StatefulWidget {
-  const StatsScreen({Key? key, this.animationController}) : super(key: key);
   final AnimationController? animationController;
+  const StatsScreen({Key? key, this.animationController}) : super(key: key);
+
   @override
   _StatsScreenState createState() => _StatsScreenState();
 }
@@ -23,14 +18,18 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen>
     with TickerProviderStateMixin {
   Animation<double>? topBarAnimation;
-  final storage = new FlutterSecureStorage();
-
+  int? month, year;
+  DateTime? _selected;
+  TextEditingController dateinput = TextEditingController();
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   @override
   void initState() {
+    dateinput.text = DateFormat('yyyy-MM').format(DateTime.now());
+    setSelectedMonth(int.parse(dateinput.text.split("-")[1]));
+    setSelectedYear(int.parse(dateinput.text.split("-")[0]));
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController!,
@@ -67,8 +66,7 @@ class _StatsScreenState extends State<StatsScreen>
 
     listViews.add(
       TitleView(
-        titleTxt: 'Overview',
-        subTxt: 'Details',
+        titleTxt: 'Mood Chart',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
@@ -81,6 +79,16 @@ class _StatsScreenState extends State<StatsScreen>
     );
   }
 
+  setSelectedMonth(int month) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("month", month);
+  }
+
+  setSelectedYear(int year) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("year", year);
+  }
+
   Future<bool> getData() async {
     await Future<dynamic>.delayed(const Duration(milliseconds: 50));
     return true;
@@ -89,7 +97,7 @@ class _StatsScreenState extends State<StatsScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: FitnessAppTheme.background,
+      color: HomeTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -145,14 +153,14 @@ class _StatsScreenState extends State<StatsScreen>
                     0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: FitnessAppTheme.white.withOpacity(topBarOpacity),
+                    color: HomeTheme.white.withOpacity(topBarOpacity),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: FitnessAppTheme.grey
-                              .withOpacity(0.4 * topBarOpacity),
+                          color:
+                              HomeTheme.grey.withOpacity(0.4 * topBarOpacity),
                           offset: const Offset(1.1, 1.1),
                           blurRadius: 10.0),
                     ],
@@ -178,76 +186,75 @@ class _StatsScreenState extends State<StatsScreen>
                                   'Stats',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    fontFamily: FitnessAppTheme.fontName,
+                                    fontFamily: HomeTheme.fontName,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 22 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
-                                    color: FitnessAppTheme.darkerText,
+                                    color: HomeTheme.darkerText,
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 38,
-                              width: 38,
-                              child: InkWell(
-                                highlightColor: Colors.transparent,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(32.0)),
-                                onTap: () {},
-                                child: Center(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_left,
-                                    color: FitnessAppTheme.grey,
+                            InkWell(
+                                onTap: () async {
+                                  DateTime? pickedDate = await showMonthPicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(
+                                        2000), //DateTime.now() - not to allow to choose before today.
+                                    lastDate: DateTime(2101),
+                                    locale: null,
+                                  );
+
+                                  if (pickedDate != null) {
+                                    String formattedDate = DateFormat('yyyy-MM')
+                                        .format(pickedDate);
+                                    setState(() {
+                                      dateinput.text = formattedDate;
+                                      year = int.parse(
+                                          formattedDate.split("-")[0]);
+                                      month = int.parse(
+                                          formattedDate.split("-")[1]);
+                                    });
+                                    setSelectedMonth(month!);
+                                    setSelectedYear(year!);
+                                  } else {
+                                    String formattedDate = DateFormat('yyyy-MM')
+                                        .format(DateTime.now());
+                                    setState(() {
+                                      dateinput.text = formattedDate;
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8,
+                                    right: 8,
                                   ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      Icons.calendar_today,
-                                      color: FitnessAppTheme.grey,
-                                      size: 18,
-                                    ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8),
+                                          child: Icon(
+                                            Icons.calendar_today,
+                                            color: HomeTheme.grey,
+                                            size: 18,
+                                          )),
+                                      Text(
+                                        dateinput.text,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: HomeTheme.fontName,
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 18,
+                                          letterSpacing: -0.2,
+                                          color: HomeTheme.darkerText,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    '15 May',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: FitnessAppTheme.fontName,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 18,
-                                      letterSpacing: -0.2,
-                                      color: FitnessAppTheme.darkerText,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 38,
-                              width: 38,
-                              child: InkWell(
-                                highlightColor: Colors.transparent,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(32.0)),
-                                onTap: () {},
-                                child: Center(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: FitnessAppTheme.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
+                                )),
                           ],
                         ),
                       )
@@ -261,4 +268,30 @@ class _StatsScreenState extends State<StatsScreen>
       ],
     );
   }
+
+  // Future<void> _onPressed({
+  //   required BuildContext context,
+  //   String? locale,
+  // }) async {
+  //   final localeObj = locale != null ? Locale(locale) : null;
+  //   final selected = await showMonthYearPicker(
+  //     context: context,
+  //     initialDate: _selected ?? DateTime.now(),
+  //     firstDate: DateTime(2019),
+  //     lastDate: DateTime(2022),
+  //     locale: localeObj,
+  //   );
+  //   if (selected != null) {
+  //     setState(() {
+  //       _selected = selected;
+  //     });
+  //   }
+  // }
+
+  // DateTime? pickedDate = await showDatePicker(
+  // initialDate: DateTime.now(),
+  // firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+  // lastDate: DateTime(2101)
+  // );
+
 }
