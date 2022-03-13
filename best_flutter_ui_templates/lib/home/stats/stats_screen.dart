@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:best_flutter_ui_templates/fitness_app/ui_view/body_measurement.dart';
 import 'package:best_flutter_ui_templates/fitness_app/ui_view/glass_view.dart';
 import 'package:best_flutter_ui_templates/fitness_app/ui_view/mediterranean_diet_view.dart';

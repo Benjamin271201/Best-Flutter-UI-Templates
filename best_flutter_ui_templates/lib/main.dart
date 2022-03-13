@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:best_flutter_ui_templates/app_theme.dart';
-import 'package:best_flutter_ui_templates/model/user.dart';
+import 'package:best_flutter_ui_templates/introduction_animation/components/welcome_view.dart';
+import 'package:best_flutter_ui_templates/introduction_animation/introduction_animation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'introduction_animation/introduction_animation_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:best_flutter_ui_templates/home/home_screen.dart';
-import 'model/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +15,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  User tmp = new User(id: 5, username: "d", gender: false);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class MyApp extends StatelessWidget {
         textTheme: AppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: HomeScreen(user: tmp),
+      home: IntroductionAnimationScreen(),
     );
   }
 }

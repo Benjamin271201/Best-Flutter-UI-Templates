@@ -1,7 +1,11 @@
 
+// ignore_for_file: unused_import
+
 import 'dart:convert';
 
 import 'package:best_flutter_ui_templates/home/stats/mood.dart';
+import 'package:best_flutter_ui_templates/home/ui/add_sleep.dart';
+import 'package:best_flutter_ui_templates/model/moodSleep.dart';
 import 'package:best_flutter_ui_templates/model/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -68,13 +72,45 @@ class HttpService {
       'year' : year.toString()
     };
     final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Sleeps/user', queryParameters);
-    // final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     var res = await http.get(uri);
     if (res.statusCode == 200){
        return sleepFromJson(res.body);
     }
     else{
       throw new Exception("Error");
+    }
+  }
+  Future<List<MoodSleep>> getMoodList() async {
+    var client = http.Client();
+    final uri = Uri.parse(baseUrl + "Moods");
+    var res = await http.get(uri);
+    if (res.statusCode == 200){
+      return moodSleepFromJson(res.body);
+    }
+    else{
+      throw new Exception("Error");
+    }
+  }
+
+  Future<bool> AddSleep(String startSleep, String endSleep, String sleepDate, String description, int userId, int moodId) async{
+    var client = http.Client();
+    String body = jsonEncode({
+      "startHour": int.parse(startSleep.split(":")[0]),
+      "startMinute": int.parse(startSleep.split(":")[1]),
+      "endHour": int.parse(endSleep.split(":")[0]),
+      "endMinute": int.parse(endSleep.split(":")[1]),
+      "slDescription": description,
+      "sleepDate": sleepDate,
+      "moodId": moodId,
+      "userId": userId
+    });
+    var res = await client.post(Uri.parse(baseUrl+"Sleeps"),headers: {'Content-Type': 'application/json'},body: body);
+    if(res.statusCode == 201){
+      var json = res.body;
+      return true;
+    }
+    else{
+      return false;
     }
   }
 }

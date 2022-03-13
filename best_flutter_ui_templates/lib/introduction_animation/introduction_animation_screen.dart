@@ -1,4 +1,6 @@
 
+// ignore_for_file: unused_element
+
 import 'package:best_flutter_ui_templates/introduction_animation/components/welcome_view.dart';
 import 'package:flutter/material.dart';
 

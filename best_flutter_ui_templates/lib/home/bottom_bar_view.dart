@@ -1,4 +1,7 @@
 import 'dart:math' as math;
+import 'package:best_flutter_ui_templates/home/ui/add_sleep.dart';
+
+import '../model/user.dart';
 import 'home_theme.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +10,24 @@ import '../../main.dart';
 import 'models/tabIcon_data.dart';
 
 class BottomBarView extends StatefulWidget {
+  final User user;
   const BottomBarView(
-      {Key? key, this.tabIconsList, this.changeIndex, this.addClick})
-      : super(key: key);
+      {this.tabIconsList, this.changeIndex, this.addClick, required User user})
+      : this.user = user;
 
   final Function(int index)? changeIndex;
   final Function()? addClick;
   final List<TabIconData>? tabIconsList;
   @override
-  _BottomBarViewState createState() => _BottomBarViewState();
+  _BottomBarViewState createState() => _BottomBarViewState(user);
 }
 
 class _BottomBarViewState extends State<BottomBarView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
+  final User user;
 
+  _BottomBarViewState(this.user);
   @override
   void initState() {
     animationController = AnimationController(
@@ -169,7 +175,7 @@ class _BottomBarViewState extends State<BottomBarView>
                           splashColor: Colors.white.withOpacity(0.1),
                           highlightColor: Colors.transparent,
                           focusColor: Colors.transparent,
-                          onTap: widget.addClick,
+                          onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => AddSleep(user: user)))},
                           child: Icon(
                             Icons.add,
                             color: HomeTheme.white,

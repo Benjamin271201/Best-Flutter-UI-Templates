@@ -1,3 +1,6 @@
+// ignore_for_file: unused_import
+
+import 'package:best_flutter_ui_templates/fitness_app/training/profile_screen.dart';
 import 'package:best_flutter_ui_templates/fitness_app/training/training_screen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_bar_view.dart';
@@ -91,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: SizedBox(),
         ),
         BottomBarView(
+            user: user,
             tabIconsList: tabIconsList,
             addClick: () {},
             changeIndex: (int index) {
@@ -134,8 +138,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       return;
                     }
                     setState(() {
-                      tabBody =
-                          StatsScreen(animationController: animationController);
+                      tabBody = ProfileScreen(user: user);
                     });
                   });
                   break;
