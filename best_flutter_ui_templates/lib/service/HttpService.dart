@@ -80,6 +80,44 @@ class HttpService {
     }
   }
 
+  Future<double> getAvgSleepByMonth(int userId, int month, int year) async {
+    var client = http.Client();
+    final queryParameters = {
+      'userId' : userId.toString(),
+      "month" : month.toString(),
+      "year" : year.toString()
+    };
+    final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Sleeps/average', queryParameters);
+    var res = await client.get(uri);
+    if (res.statusCode == 200){
+      var response = res.body;
+      var result = response.substring(1, response.length-1).split(":")[1];
+      return double.parse(result).ceilToDouble();
+    }
+    else{
+      throw new Exception("Error");
+    }
+  }
+
+  Future<double> getTotalSleepByMonth(int userId, int month, int year) async {
+    var client = http.Client();
+    final queryParameters = {
+      'userId' : userId.toString(),
+      "month" : month.toString(),
+      "year" : year.toString()
+    };
+    final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Sleeps/total', queryParameters);
+    var res = await client.get(uri);
+    if (res.statusCode == 200){
+      var response = res.body;
+      var result = response.substring(1, response.length-1).split(":")[1];
+      return double.parse(result).ceilToDouble();
+    }
+    else{
+      throw new Exception("Error");
+    }
+  }
+
   Future<List<Sleep>> getSleepDiaryByMonth(int userId, int month, int year) async {
     var client = http.Client();
     final queryParameters = {

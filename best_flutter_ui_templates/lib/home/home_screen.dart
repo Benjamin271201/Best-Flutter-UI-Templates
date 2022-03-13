@@ -39,12 +39,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   setUsername(String username) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("username", "benjamin");
+    await prefs.setString("username", user.username);
   }
 
   setUserId(int id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("id", 6);
+    await prefs.setInt("id", user.id);
   }
 
   @override

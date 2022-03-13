@@ -4,7 +4,7 @@ class HomeTheme {
   HomeTheme._();
   static const Color nearlyWhite = Color(0xFFFAFAFA);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color background = Color(0xFFF2F3F8);
+  static const Color background = Color(0xFFf5e5cb);
   static const Color nearlyDarkBlue = Color(0xFF2633C5);
 
   static const Color nearlyBlue = Color(0xFF00B6F0);

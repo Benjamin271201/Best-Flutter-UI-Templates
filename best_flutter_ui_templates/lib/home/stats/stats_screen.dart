@@ -1,3 +1,4 @@
+import 'package:best_flutter_ui_templates/home/stats/avg_sleep_card.dart';
 import 'package:best_flutter_ui_templates/home/ui/title_view.dart';
 import 'package:best_flutter_ui_templates/home/stats/mood_chart.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,19 @@ class _StatsScreenState extends State<StatsScreen>
     );
     listViews.add(
       MoodChart(),
+    );
+    listViews.add(
+      TitleView(
+        titleTxt: 'Sleep Stats',
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+            Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
+    listViews.add(
+      AverageSleep(),
     );
   }
 
@@ -218,6 +232,7 @@ class _StatsScreenState extends State<StatsScreen>
                                     });
                                     setSelectedMonth(month!);
                                     setSelectedYear(year!);
+                                    setState(() {});
                                   } else {
                                     String formattedDate = DateFormat('yyyy-MM')
                                         .format(DateTime.now());
@@ -268,30 +283,5 @@ class _StatsScreenState extends State<StatsScreen>
       ],
     );
   }
-
-  // Future<void> _onPressed({
-  //   required BuildContext context,
-  //   String? locale,
-  // }) async {
-  //   final localeObj = locale != null ? Locale(locale) : null;
-  //   final selected = await showMonthYearPicker(
-  //     context: context,
-  //     initialDate: _selected ?? DateTime.now(),
-  //     firstDate: DateTime(2019),
-  //     lastDate: DateTime(2022),
-  //     locale: localeObj,
-  //   );
-  //   if (selected != null) {
-  //     setState(() {
-  //       _selected = selected;
-  //     });
-  //   }
-  // }
-
-  // DateTime? pickedDate = await showDatePicker(
-  // initialDate: DateTime.now(),
-  // firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-  // lastDate: DateTime(2101)
-  // );
 
 }
