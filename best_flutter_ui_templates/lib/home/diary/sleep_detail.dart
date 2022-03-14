@@ -19,28 +19,34 @@ class SleepDetail extends StatelessWidget {
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
     return Card(
-      color: Colors.white,
+      color: HomeTheme.background,
       child: Column(
         children: <Widget>[
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '< Sleep detail',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontFamily: HomeTheme.fontName,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 26,
-                  letterSpacing: 1.2,
-                  color: HomeTheme.darkerText,
-                ),
-              ),
-            ),
+          SizedBox(
+            height: MediaQuery.of(context).padding.top,
           ),
+          Padding(
+              padding:
+                  EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 12),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Sleep detail',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: HomeTheme.fontName,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 26,
+                      letterSpacing: 1.2,
+                      color: HomeTheme.darkerText,
+                    ),
+                  ),
+                ),
+              )),
           Container(
             padding: const EdgeInsets.all(10),
             child: ListTile(
