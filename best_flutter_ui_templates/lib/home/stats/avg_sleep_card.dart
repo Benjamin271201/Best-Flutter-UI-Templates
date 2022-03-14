@@ -108,8 +108,8 @@ class _AverageSleepState extends State<AverageSleep> {
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontFamily: HomeTheme.fontName,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35,
                       letterSpacing: 0.5,
                       color: HomeTheme.nearlyDarkBlue,
                     ),
@@ -133,8 +133,8 @@ class _AverageSleepState extends State<AverageSleep> {
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontFamily: HomeTheme.fontName,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35,
                       letterSpacing: 0.5,
                       color: HomeTheme.nearlyDarkBlue,
                     ),

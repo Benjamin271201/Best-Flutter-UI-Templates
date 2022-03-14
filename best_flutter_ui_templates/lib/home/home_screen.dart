@@ -2,6 +2,7 @@
 
 import 'package:best_flutter_ui_templates/fitness_app/training/profile_screen.dart';
 import 'package:best_flutter_ui_templates/fitness_app/training/training_screen.dart';
+import 'package:best_flutter_ui_templates/home/alram_clock/alram_clock_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'bottom_bar_view.dart';
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     }
                     setState(() {
                       tabBody =
-                          StatsScreen(animationController: animationController);
+                          AlarmClock(animationController: animationController);
                     });
                   });
                   break;

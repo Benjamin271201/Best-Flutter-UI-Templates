@@ -1,9 +1,12 @@
 import 'package:best_flutter_ui_templates/fitness_app/ui_view/title_view.dart';
 import 'package:best_flutter_ui_templates/home/diary/sleep.dart';
+import 'package:best_flutter_ui_templates/home/diary/sleep_detail.dart';
 import 'package:best_flutter_ui_templates/home/home_theme.dart';
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:flutter/material.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class DiaryScreen extends StatefulWidget {
   const DiaryScreen({Key? key, this.animationController}) : super(key: key);
@@ -19,16 +22,19 @@ class _DiaryScreenState extends State<DiaryScreen>
 
   List<Sleep>? listSleep;
   String? username;
-  int userId = 0;
+  int month = 0, year = 0, userId = 6;
   var isLoaded = false;
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  TextEditingController dateinput = TextEditingController();
 
   @override
   void initState() {
     getUser();
-    getDiary();
+    getSelectedMonthYear();
+    dateinput.text = DateFormat('yyyy-MM').format(DateTime.now());
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController!,
@@ -89,18 +95,18 @@ class _DiaryScreenState extends State<DiaryScreen>
     return true;
   }
 
-  getDiary() async {
-    if (await getUser()) {
-      listSleep = await HttpService().getSleepDiaryByMonth(userId, 3, 2022);
-      if (listSleep != null)
-        setState(() {
-          isLoaded = true;
-        });
-    }
-  }
-
-  void _showSleepDetail() {
-    //TODO: show sleep detail code
+  Future<bool> getDiary() async {
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      if (await getUser()) {
+        listSleep =
+        await HttpService().getSleepDiaryByMonth(userId, month, year);
+        if (listSleep != null)
+          setState(() {
+            isLoaded = true;
+          });
+      }
+    });
+    return true;
   }
 
   @override
@@ -144,13 +150,58 @@ class _DiaryScreenState extends State<DiaryScreen>
                 itemBuilder: (BuildContext context, int index) {
                   final item = listSleep![index];
                   return InkWell(
-                      onTap: _showSleepDetail,
-                      child: ListTile(title: Text(item.mood)));
+                      onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SleepDetail(sleep: listSleep![index])))
+                          },
+                      child: Card(
+                          color: Colors.white,
+                          child: Row(children: <Widget>[
+                            Expanded(
+                                child: ListTile(
+                                    title: Text(formatter
+                                        .format(item.sleepDate)
+                                        .toString()))),
+                            SizedBox(
+                              width: 100,
+                              child: ListTile(
+                                title: Text("Mood: " + item.mood.toString()),
+                                textColor: Colors.red,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: ListTile(
+                                  title: Text("Duration: " +
+                                      convertToHours(item.sleepDuration)),
+                                  textColor: Colors.green),
+                            )
+                          ])));
                 },
               ));
         }
       },
     );
+  }
+
+  Future<bool> getSelectedMonthYear() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      month = prefs.getInt("month")!;
+      year = prefs.getInt("year")!;
+      userId = prefs.getInt("id")!;
+    });
+    getDiary();
+    return true;
+  }
+
+  String convertToHours(int sleepTime) {
+    int hours = sleepTime ~/ 60;
+    int mins = sleepTime - (hours * 60);
+    return hours.toString() + "h" + mins.toString();
   }
 
   Widget getAppBarUI() {
@@ -198,27 +249,35 @@ class _DiaryScreenState extends State<DiaryScreen>
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 38,
-                    width: 38,
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(32.0)),
-                      onTap: () {},
-                      child: Center(
-                        child: Icon(
-                          Icons.keyboard_arrow_left,
-                          color: HomeTheme.grey,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8,
-                      right: 8,
-                    ),
+                  InkWell(
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            2000), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2101),
+                        locale: null,
+                      );
+
+                      if (pickedDate != null) {
+                        String formattedDate =
+                        DateFormat('yyyy-MM').format(pickedDate);
+                        setState(() {
+                          dateinput.text = formattedDate;
+                          year = int.parse(formattedDate.split("-")[0]);
+                          month = int.parse(formattedDate.split("-")[1]);
+                        });
+                        getDiary();
+                      } else {
+                        String formattedDate =
+                        DateFormat('yyyy-MM').format(DateTime.now());
+                        setState(() {
+                          dateinput.text = formattedDate;
+                        });
+                        getDiary();
+                      }
+                    },
                     child: Row(
                       children: <Widget>[
                         Padding(
@@ -230,7 +289,7 @@ class _DiaryScreenState extends State<DiaryScreen>
                           ),
                         ),
                         Text(
-                          '15 May',
+                          dateinput.text,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontFamily: HomeTheme.fontName,
@@ -241,22 +300,6 @@ class _DiaryScreenState extends State<DiaryScreen>
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 38,
-                    width: 38,
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(32.0)),
-                      onTap: () {},
-                      child: Center(
-                        child: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: HomeTheme.grey,
-                        ),
-                      ),
                     ),
                   ),
                 ],
