@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:best_flutter_ui_templates/home/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../../service/HttpService.dart';
+import '../../service/notificationService.dart';
 import 'login_view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -52,6 +53,7 @@ class _RegisterViewState extends State<RegisterView> {
                       border: OutlineInputBorder(),
                       labelText: 'Username',
                       errorText: usernameError?"Username need to be at least 4 characters":null,
+                        suffixIcon: Icon(Icons.abc)
                     ),
                   ),
                 ),
@@ -65,7 +67,8 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
-                      errorText: passwordError?"Password need to be at least 4 characters":null
+                      errorText: passwordError?"Password need to be at least 4 characters":null,
+                      suffixIcon: Icon(Icons.password)
                     ),
                   ),
                 ),
@@ -200,13 +203,14 @@ class _RegisterViewState extends State<RegisterView> {
       var user = await HttpService()
           .register(usernameController.text, passwordController.text, g);
       if (user != null) {
+        NotificationService().showNotification(2, "Hello", "Nice to meet you!", 4);
         Navigator.of(context).pop();
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => HomeScreen(user: user)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Username or Password is incorrect")));
+            SnackBar(content: Text("Username already exist")));
       }
     } else {
       setState(() {

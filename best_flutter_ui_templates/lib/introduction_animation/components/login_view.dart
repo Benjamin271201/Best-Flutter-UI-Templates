@@ -1,8 +1,12 @@
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
+import 'package:best_flutter_ui_templates/service/notificationService.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'register_view.dart';
 import 'package:best_flutter_ui_templates/home/home_screen.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class LoginView extends StatefulWidget {
   @override
@@ -13,6 +17,13 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _isInAsyncCall = false;
+  bool usernameError = false, passwordError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    tz.initializeTimeZones();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
                   child: Text(
                     "Login",
                     style:
-                    TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -36,9 +47,14 @@ class _LoginViewState extends State<LoginView> {
                   padding: const EdgeInsets.all(10),
                   child: TextField(
                     controller: usernameController,
-                    decoration: const InputDecoration(
+                    maxLength: 10,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Username',
+                      errorText: usernameError
+                          ? "Username need to be at least 4 characters"
+                          : null,
                       suffixIcon: Icon(Icons.abc),
                     ),
                   ),
@@ -48,11 +64,15 @@ class _LoginViewState extends State<LoginView> {
                   child: TextField(
                     controller: passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
-                      suffixIcon: Icon(Icons.password),
-                    ),
+                    maxLength: 10,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                        errorText: passwordError
+                            ? "Password need to be at least 4 characters"
+                            : null,
+                        suffixIcon: Icon(Icons.password)),
                   ),
                 ),
                 Container(
@@ -123,28 +143,47 @@ class _LoginViewState extends State<LoginView> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => RegisterView()));
   }
-  void _loginClick() async{
+
+  void _loginClick() async {
     FocusScope.of(context).requestFocus(new FocusNode());
 
     // start the modal progress HUD
     setState(() {
       _isInAsyncCall = true;
     });
-    if(usernameController.text.isNotEmpty && passwordController.text.isNotEmpty){
-      var user = await HttpService().login(usernameController.text, passwordController.text);
-      if(user != null) {
+    if (usernameController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
+      if (usernameController.text.length < 4) {
+        setState(() {
+          _isInAsyncCall = false;
+          usernameError = true;
+        });
+        return;
+      }
+      if (passwordController.text.length < 4) {
+        setState(() {
+          _isInAsyncCall = false;
+          passwordError = true;
+        });
+        return;
+      }
+      var user = await HttpService()
+          .login(usernameController.text, passwordController.text);
+      if (user != null) {
+        String tip = await HttpService().getAdvice();
+        NotificationService()
+            .showNotification(1, "Hi! Here's a tip for better sleep", tip, 4);
         Navigator.of(context).pop();
-        Navigator.pushReplacement(
-            context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
-      } else{
+      } else {
         setState(() {
           _isInAsyncCall = false;
         });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Username or Password is incorrect")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Username or Password is incorrect")));
       }
-    } else{
+    } else {
       setState(() {
         _isInAsyncCall = false;
       });

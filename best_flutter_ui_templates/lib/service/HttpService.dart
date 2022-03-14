@@ -167,4 +167,15 @@ class HttpService {
       return false;
     }
   }
+  Future<String> getAdvice() async{
+    var client = http.Client();
+    final uri = Uri.parse(baseUrl + "Quotes/random");
+    var res = await client.get(uri);
+    if(res.statusCode == 200){
+      String raw = json.decode(res.body).toString();
+      raw = raw.substring(1,raw.length-1);
+      return raw.split(": ")[1];
+    }
+    return "";
+  }
 }
