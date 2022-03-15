@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/title_view.dart';
+import 'package:best_flutter_ui_templates/home/ui/title_view.dart';
 import 'package:best_flutter_ui_templates/home/diary/sleep.dart';
 import 'package:best_flutter_ui_templates/home/diary/sleep_detail.dart';
 import 'package:best_flutter_ui_templates/home/home_theme.dart';

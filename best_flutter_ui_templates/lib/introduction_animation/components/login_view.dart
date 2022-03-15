@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'register_view.dart';
 import 'package:best_flutter_ui_templates/home/home_screen.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
 class LoginView extends StatefulWidget {

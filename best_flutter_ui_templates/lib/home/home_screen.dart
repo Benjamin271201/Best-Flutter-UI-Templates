@@ -1,7 +1,6 @@
 // ignore_for_file: unused_import
 
-import 'package:best_flutter_ui_templates/fitness_app/training/profile_screen.dart';
-import 'package:best_flutter_ui_templates/fitness_app/training/training_screen.dart';
+import 'package:best_flutter_ui_templates/home/profile/profile_screen.dart';
 import 'package:best_flutter_ui_templates/home/alram_clock/alram_clock_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

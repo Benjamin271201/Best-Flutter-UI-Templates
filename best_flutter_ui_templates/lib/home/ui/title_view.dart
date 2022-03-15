@@ -1,6 +1,5 @@
 // ignore_for_file: unused_import
 
-import 'package:best_flutter_ui_templates/fitness_app/fitness_app_theme.dart';
 import 'package:best_flutter_ui_templates/home/home_theme.dart';
 import 'package:flutter/material.dart';
 

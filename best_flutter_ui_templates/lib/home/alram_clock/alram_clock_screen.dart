@@ -1,6 +1,7 @@
 import 'package:best_flutter_ui_templates/home/ui/title_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
+import 'package:intl/intl.dart';
 
 import '../home_theme.dart';
 
@@ -61,7 +62,7 @@ class _AlarmClockState extends State<AlarmClock> with TickerProviderStateMixin {
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
-            Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
     );
@@ -126,6 +127,21 @@ class _AlarmClockState extends State<AlarmClock> with TickerProviderStateMixin {
     ]);
   }
 
+  Widget getCurrentTimeUI() {
+    return 
+      Padding(padding: EdgeInsets.only(top: 50, bottom: 20),
+        child: Center(
+        child: StreamBuilder(
+            stream: Stream.periodic(const Duration(seconds: 1)),
+            builder: (context, snapshot) {
+              return Text(
+                "Current time: " +
+                    DateFormat('HH:mm:ss').format(DateTime.now()),
+                style: TextStyle(fontSize: 30),
+              );
+            })));
+  }
+
   void _selectTime() async {
     TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
     final TimeOfDay? newTime = await showTimePicker(
@@ -145,40 +161,43 @@ class _AlarmClockState extends State<AlarmClock> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Center(
-            child: Column(children: <Widget>[
-              getAppBarUI(),
-              Container(
-                child: ElevatedButton(
-                  onPressed: _selectTime,
-                  child: Text('SELECT TIME'),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(25),
-                child: TextButton(
-                  child: Text(
-                    'Create alarm at ' + hour.toString() + ":" + minute.toString(),
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                  onPressed: () {
-                    FlutterAlarmClock.createAlarm(hour, minute);
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(25),
-                child: TextButton(
-                  child: const Text(
-                    'Show alarms',
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                  onPressed: () {
-                    FlutterAlarmClock.showAlarms();
-                  },
-                ),
-              ),
-            ])),
+      child: Center(
+          child: Column(children: <Widget>[
+        getAppBarUI(),
+        getCurrentTimeUI(),
+        InkWell(
+            onTap: _selectTime,
+            child: SizedBox(
+                height: 100,
+                child: Text(
+                  hour.toString() + ":" + minute.toString(),
+                  style: TextStyle(fontSize: 100),
+                ))),
+        Container(
+          margin: const EdgeInsets.all(25),
+          child: ElevatedButton(
+            child: Text(
+              'Create alarm at ' + hour.toString() + ":" + minute.toString(),
+              style: TextStyle(fontSize: 20.0),
+            ),
+            onPressed: () {
+              FlutterAlarmClock.createAlarm(hour, minute);
+            },
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(25),
+          child: TextButton(
+            child: const Text(
+              'Show alarms',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            onPressed: () {
+              FlutterAlarmClock.showAlarms();
+            },
+          ),
+        ),
+      ])),
     );
   }
 }

@@ -149,10 +149,12 @@ class _AverageSleepState extends State<AverageSleep> {
     int mins = tmpDaily.ceil() - (hours * 60);
     int hoursTotal = tmpTotal ~/ 60;
     int minsTotal = tmpTotal.ceil() - (hoursTotal * 60);
-    setState(() {
-      avgSleep = hours.toString() + "h" + mins.toString();
-      totalSleep = hoursTotal.toString() + "h" + minsTotal.toString();
-    });
+    if (mounted) {
+      setState(() {
+        avgSleep = hours.toString() + "h" + mins.toString();
+        totalSleep = hoursTotal.toString() + "h" + minsTotal.toString();
+      });
+    }
   }
 
   void getSleepStats() async {

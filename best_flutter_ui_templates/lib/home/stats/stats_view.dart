@@ -1,6 +1,6 @@
 // ignore_for_file: unused_import
 
-import 'package:best_flutter_ui_templates/fitness_app/fitness_app_theme.dart';
+import 'package:best_flutter_ui_templates/home/home_theme.dart';
 import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -30,7 +30,7 @@ class StatsView extends StatelessWidget {
                   left: 24, right: 24, top: 16, bottom: 18),
               child: Container(
                 decoration: BoxDecoration(
-                  color: FitnessAppTheme.white,
+                  color: HomeTheme.white,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8.0),
                       bottomLeft: Radius.circular(8.0),
@@ -38,7 +38,7 @@ class StatsView extends StatelessWidget {
                       topRight: Radius.circular(68.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                        color: FitnessAppTheme.grey.withOpacity(0.2),
+                        color: HomeTheme.grey.withOpacity(0.2),
                         offset: Offset(1.1, 1.1),
                         blurRadius: 10.0),
                   ],
@@ -83,11 +83,11 @@ class StatsView extends StatelessWidget {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily:
-                                                    FitnessAppTheme.fontName,
+                                                    HomeTheme.fontName,
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 16,
                                                 letterSpacing: -0.1,
-                                                color: FitnessAppTheme.grey
+                                                color: HomeTheme.grey
                                                     .withOpacity(0.5),
                                               ),
                                             ),
@@ -111,11 +111,11 @@ class StatsView extends StatelessWidget {
                                                   '${(1127 * animation!.value).toInt()}',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontFamily: FitnessAppTheme
+                                                    fontFamily: HomeTheme
                                                         .fontName,
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 16,
-                                                    color: FitnessAppTheme
+                                                    color: HomeTheme
                                                         .darkerText,
                                                   ),
                                                 ),
@@ -127,12 +127,12 @@ class StatsView extends StatelessWidget {
                                                   'Kcal',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontFamily: FitnessAppTheme
+                                                    fontFamily: HomeTheme
                                                         .fontName,
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 12,
                                                     letterSpacing: -0.2,
-                                                    color: FitnessAppTheme.grey
+                                                    color: HomeTheme.grey
                                                         .withOpacity(0.5),
                                                   ),
                                                 ),
@@ -175,11 +175,11 @@ class StatsView extends StatelessWidget {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily:
-                                                    FitnessAppTheme.fontName,
+                                                    HomeTheme.fontName,
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 16,
                                                 letterSpacing: -0.1,
-                                                color: FitnessAppTheme.grey
+                                                color: HomeTheme.grey
                                                     .withOpacity(0.5),
                                               ),
                                             ),
@@ -203,11 +203,11 @@ class StatsView extends StatelessWidget {
                                                   '${(102 * animation!.value).toInt()}',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontFamily: FitnessAppTheme
+                                                    fontFamily: HomeTheme
                                                         .fontName,
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 16,
-                                                    color: FitnessAppTheme
+                                                    color: HomeTheme
                                                         .darkerText,
                                                   ),
                                                 ),
@@ -219,12 +219,12 @@ class StatsView extends StatelessWidget {
                                                   'Kcal',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontFamily: FitnessAppTheme
+                                                    fontFamily: HomeTheme
                                                         .fontName,
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 12,
                                                     letterSpacing: -0.2,
-                                                    color: FitnessAppTheme.grey
+                                                    color: HomeTheme.grey
                                                         .withOpacity(0.5),
                                                   ),
                                                 ),
@@ -246,7 +246,7 @@ class StatsView extends StatelessWidget {
                           child: Container(
                             height: 2,
                             decoration: BoxDecoration(
-                              color: FitnessAppTheme.background,
+                              color: HomeTheme.background,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4.0)),
                             ),
@@ -266,11 +266,11 @@ class StatsView extends StatelessWidget {
                                       'Carbs',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
+                                        fontFamily: HomeTheme.fontName,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
                                         letterSpacing: -0.2,
-                                        color: FitnessAppTheme.darkText,
+                                        color: HomeTheme.darkText,
                                       ),
                                     ),
                                     Padding(
@@ -311,10 +311,10 @@ class StatsView extends StatelessWidget {
                                         '12g left',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: FitnessAppTheme.fontName,
+                                          fontFamily: HomeTheme.fontName,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 12,
-                                          color: FitnessAppTheme.grey
+                                          color: HomeTheme.grey
                                               .withOpacity(0.5),
                                         ),
                                       ),
@@ -338,11 +338,11 @@ class StatsView extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily:
-                                                FitnessAppTheme.fontName,
+                                                HomeTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
                                             letterSpacing: -0.2,
-                                            color: FitnessAppTheme.darkText,
+                                            color: HomeTheme.darkText,
                                           ),
                                         ),
                                         Padding(
@@ -389,10 +389,10 @@ class StatsView extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
-                                                  FitnessAppTheme.fontName,
+                                                  HomeTheme.fontName,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: FitnessAppTheme.grey
+                                              color: HomeTheme.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),
@@ -417,11 +417,11 @@ class StatsView extends StatelessWidget {
                                           'Fat',
                                           style: TextStyle(
                                             fontFamily:
-                                                FitnessAppTheme.fontName,
+                                                HomeTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
                                             letterSpacing: -0.2,
-                                            color: FitnessAppTheme.darkText,
+                                            color: HomeTheme.darkText,
                                           ),
                                         ),
                                         Padding(
@@ -468,10 +468,10 @@ class StatsView extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
-                                                  FitnessAppTheme.fontName,
+                                                  HomeTheme.fontName,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: FitnessAppTheme.grey
+                                              color: HomeTheme.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),

@@ -209,67 +209,67 @@ class _StatsScreenState extends State<StatsScreen>
                                 ),
                               ),
                             ),
-                            InkWell(
-                                onTap: () async {
-                                  DateTime? pickedDate = await showMonthPicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(
-                                        2000), //DateTime.now() - not to allow to choose before today.
-                                    lastDate: DateTime(2101),
-                                    locale: null,
-                                  );
-
-                                  if (pickedDate != null) {
-                                    String formattedDate = DateFormat('yyyy-MM')
-                                        .format(pickedDate);
-                                    setState(() {
-                                      dateinput.text = formattedDate;
-                                      year = int.parse(
-                                          formattedDate.split("-")[0]);
-                                      month = int.parse(
-                                          formattedDate.split("-")[1]);
-                                    });
-                                    setSelectedMonth(month!);
-                                    setSelectedYear(year!);
-                                    setState(() {});
-                                  } else {
-                                    String formattedDate = DateFormat('yyyy-MM')
-                                        .format(DateTime.now());
-                                    setState(() {
-                                      dateinput.text = formattedDate;
-                                    });
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 8,
-                                    right: 8,
-                                  ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8),
-                                          child: Icon(
-                                            Icons.calendar_today,
-                                            color: HomeTheme.grey,
-                                            size: 18,
-                                          )),
-                                      Text(
-                                        dateinput.text,
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontFamily: HomeTheme.fontName,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 18,
-                                          letterSpacing: -0.2,
-                                          color: HomeTheme.darkerText,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                            // InkWell(
+                            //     onTap: () async {
+                            //       DateTime? pickedDate = await showMonthPicker(
+                            //         context: context,
+                            //         initialDate: DateTime.now(),
+                            //         firstDate: DateTime(
+                            //             2000), //DateTime.now() - not to allow to choose before today.
+                            //         lastDate: DateTime(2101),
+                            //         locale: null,
+                            //       );
+                            //
+                            //       if (pickedDate != null) {
+                            //         String formattedDate = DateFormat('yyyy-MM')
+                            //             .format(pickedDate);
+                            //         setState(() {
+                            //           dateinput.text = formattedDate;
+                            //           year = int.parse(
+                            //               formattedDate.split("-")[0]);
+                            //           month = int.parse(
+                            //               formattedDate.split("-")[1]);
+                            //         });
+                            //         setSelectedMonth(month!);
+                            //         setSelectedYear(year!);
+                            //         setState(() {});
+                            //       } else {
+                            //         String formattedDate = DateFormat('yyyy-MM')
+                            //             .format(DateTime.now());
+                            //         setState(() {
+                            //           dateinput.text = formattedDate;
+                            //         });
+                            //       }
+                            //     },
+                            //     child: Padding(
+                            //       padding: const EdgeInsets.only(
+                            //         left: 8,
+                            //         right: 8,
+                            //       ),
+                            //       child: Row(
+                            //         children: <Widget>[
+                            //           Padding(
+                            //               padding:
+                            //                   const EdgeInsets.only(right: 8),
+                            //               child: Icon(
+                            //                 Icons.calendar_today,
+                            //                 color: HomeTheme.grey,
+                            //                 size: 18,
+                            //               )),
+                            //           Text(
+                            //             dateinput.text,
+                            //             textAlign: TextAlign.left,
+                            //             style: TextStyle(
+                            //               fontFamily: HomeTheme.fontName,
+                            //               fontWeight: FontWeight.normal,
+                            //               fontSize: 18,
+                            //               letterSpacing: -0.2,
+                            //               color: HomeTheme.darkerText,
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     )),
                           ],
                         ),
                       )
