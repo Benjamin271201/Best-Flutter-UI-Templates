@@ -68,6 +68,7 @@ class _AddSleepState extends State<AddSleep> {
               new TextButton(
                 child: const Text("OK"),
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
                 },

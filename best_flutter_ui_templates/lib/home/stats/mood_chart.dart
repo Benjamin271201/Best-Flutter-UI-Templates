@@ -165,7 +165,7 @@ class MoodChartState extends State {
                 ],
               ),
               const SizedBox(
-                width: 28,
+                width: 20,
               ),
             ],
           ),
