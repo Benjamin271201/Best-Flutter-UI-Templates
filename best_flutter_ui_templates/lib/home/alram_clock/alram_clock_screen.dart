@@ -176,6 +176,7 @@ class _AlarmClockState extends State<AlarmClock> with TickerProviderStateMixin {
         Container(
           margin: const EdgeInsets.all(25),
           child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: HomeTheme.nearlyDarkBlue),
             child: Text(
               'Create alarm at ' + hour.toString() + ":" + minute.toString(),
               style: TextStyle(fontSize: 20.0),
@@ -190,7 +191,7 @@ class _AlarmClockState extends State<AlarmClock> with TickerProviderStateMixin {
           child: TextButton(
             child: const Text(
               'Show alarms',
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 20.0, color: HomeTheme.nearlyDarkBlue),
             ),
             onPressed: () {
               FlutterAlarmClock.showAlarms();

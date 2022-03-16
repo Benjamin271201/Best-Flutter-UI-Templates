@@ -47,35 +47,41 @@ class SleepDetail extends StatelessWidget {
                   ),
                 ),
               )),
-          Container(
-            padding: const EdgeInsets.all(10),
-            child: ListTile(
-                title: Text(
-                    "Date: " + formatter.format(sleep.sleepDate).toString())),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            child: ListTile(title: Text("Start time: " + sleep.startSleep)),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            child: ListTile(title: Text("End time: " + sleep.endSleep)),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            child: ListTile(
-                title:
-                    Text("Sleep time: " + convertToHours(sleep.sleepDuration))),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            child: ListTile(title: Text("Mood after waking up: " + sleep.mood)),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            child:
-                ListTile(title: Text("Dream detail: " + sleep.slDescription)),
-          ),
+          Card(
+              color: Colors.white,
+              child: Column(children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: ListTile(
+                      title: Text("Date: " +
+                          formatter.format(sleep.sleepDate).toString())),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child:
+                      ListTile(title: Text("Start time: " + sleep.startSleep)),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: ListTile(title: Text("End time: " + sleep.endSleep)),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: ListTile(
+                      title: Text("Sleep time: " +
+                          convertToHours(sleep.sleepDuration))),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: ListTile(
+                      title: Text("Mood after waking up: " + sleep.mood)),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: ListTile(
+                      title: Text("Dream detail: " + sleep.slDescription)),
+                ),
+              ]))
         ],
       ),
     );

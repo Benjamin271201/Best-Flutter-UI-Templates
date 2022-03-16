@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,6 @@ import 'mood.dart';
 
 class MoodChart extends StatefulWidget {
   const MoodChart({Key? key}) : super(key: key);
-
   @override
   MoodChartState createState() => MoodChartState();
 }
@@ -22,6 +23,7 @@ class MoodChartState extends State {
   List<Mood> moodStatusList = [];
   bool _isInAsyncCall = true;
   TextEditingController dateinput = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class MoodChartState extends State {
   @override
   Widget build(BuildContext context) {
     return new AspectRatio(
-        aspectRatio: 1.3,
+        aspectRatio: 1.5,
         child: Card(
           color: Colors.white,
           child: Row(
@@ -43,7 +45,7 @@ class MoodChartState extends State {
                   onTap: () async {
                     DateTime? pickedDate = await showMonthPicker(
                       context: context,
-                      initialDate: DateTime.now(),
+                      initialDate: selectedDate,
                       firstDate: DateTime(
                           2000), //DateTime.now() - not to allow to choose before today.
                       lastDate: DateTime(2101),
@@ -55,17 +57,11 @@ class MoodChartState extends State {
                           DateFormat('yyyy-MM').format(pickedDate);
                       setState(() {
                         dateinput.text = formattedDate;
+                        selectedDate = pickedDate;
                         year = int.parse(formattedDate.split("-")[0]);
                         month = int.parse(formattedDate.split("-")[1]);
                         getMoodStatus();
                       });
-                    } else {
-                      String formattedDate =
-                          DateFormat('yyyy-MM').format(DateTime.now());
-                      setState(() {
-                        dateinput.text = formattedDate;
-                      });
-                      getMoodStatus();
                     }
                   },
                   child: Padding(
@@ -179,7 +175,7 @@ class MoodChartState extends State {
   Future<bool> getMoodStatus() async {
     Future.delayed(const Duration(milliseconds: 300), () async {
       var list = await HttpService().getMoodStatByMonth(userId, month, year);
-      if (list.isNotEmpty)
+      if (list.isNotEmpty && mounted)
         setState(() {
           moodStatusList = list;
         });

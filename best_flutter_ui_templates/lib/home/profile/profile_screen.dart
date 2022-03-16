@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(user.username.toUpperCase(), style: TextStyle(color: Colors.green,fontSize: 26, fontFamily: HomeTheme.fontName, fontWeight: FontWeight.bold),),backgroundColor: HomeTheme.background,),
+      appBar: AppBar(title: Text(user.username.toUpperCase(), style: TextStyle(color: HomeTheme.nearlyDarkBlue,fontSize: 26, fontFamily: HomeTheme.fontName, fontWeight: FontWeight.bold),),backgroundColor: HomeTheme.background,),
       body:
       Center(
         child: profileCard(context),
@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RawMaterialButton(
-          fillColor: Colors.green,
+          fillColor: HomeTheme.nearlyDarkBlue,
           splashColor: Colors.greenAccent,
           child: Padding(
             padding: EdgeInsets.all(10.0),
