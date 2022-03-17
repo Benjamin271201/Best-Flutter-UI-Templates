@@ -10,23 +10,23 @@ String userToJson(User data) => json.encode(data.toJson());
 
 class User {
   User({
-    required this.id,
+    required this.token,
     required this.username,
     required this.gender,
   });
 
-  int id;
+  String token;
   String username;
   bool gender;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"],
+    token: json["token"],
     username: json["username"],
     gender: json["gender"],
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "token": token,
     "username": username,
     "gender": gender,
   };

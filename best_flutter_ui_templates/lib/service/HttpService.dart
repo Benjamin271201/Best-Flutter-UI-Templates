@@ -1,6 +1,7 @@
 
 // ignore_for_file: unused_import
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:best_flutter_ui_templates/home/stats/mood.dart';
@@ -10,11 +11,17 @@ import 'package:best_flutter_ui_templates/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home/diary/sleep.dart';
 
 class HttpService {
   final String baseUrl = "https://sleeptracker.azurewebsites.net/api/";
+
+  Future<String> getToken()async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString("token")!;
+  }
 
   Future<User?> login(String username, String password) async{
     var client = http.Client();
@@ -49,15 +56,16 @@ class HttpService {
     }
   }
 
-  Future<List<Mood>> getMoodStatByMonth(int userId, int month, int year) async {
+  Future<List<Mood>> getMoodStatByMonth( int month, int year, String token) async {
     var client = http.Client();
     final queryParameters = {
-      'userId' : userId.toString(),
       "month" : month.toString(),
       "year" : year.toString()
     };
     final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Moods/summary', queryParameters);
-    var res = await client.get(uri);
+    var res = await client.get(uri,headers: {
+      "Authorization": 'Bearer ' + token,
+    });
     if (res.statusCode == 200){
       var moodStatus = res.body;
       var moodStatusStr = json.decode(moodStatus).toString();
@@ -80,15 +88,16 @@ class HttpService {
     }
   }
 
-  Future<double> getAvgSleepByMonth(int userId, int month, int year) async {
+  Future<double> getAvgSleepByMonth( int month, int year, String token) async {
     var client = http.Client();
     final queryParameters = {
-      'userId' : userId.toString(),
       "month" : month.toString(),
       "year" : year.toString()
     };
     final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Sleeps/average', queryParameters);
-    var res = await client.get(uri);
+    var res = await client.get(uri, headers: {
+      "Authorization": 'Bearer ' + token,
+    });
     if (res.statusCode == 200){
       var response = res.body;
       var result = response.substring(1, response.length-1).split(":")[1];
@@ -99,15 +108,16 @@ class HttpService {
     }
   }
 
-  Future<double> getTotalSleepByMonth(int userId, int month, int year) async {
+  Future<double> getTotalSleepByMonth(int month, int year, String token) async {
     var client = http.Client();
     final queryParameters = {
-      'userId' : userId.toString(),
       "month" : month.toString(),
       "year" : year.toString()
     };
     final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Sleeps/total', queryParameters);
-    var res = await client.get(uri);
+    var res = await client.get(uri, headers: {
+      'Authorization':'Bearer ' + token,
+    });
     if (res.statusCode == 200){
       var response = res.body;
       var result = response.substring(1, response.length-1).split(":")[1];
@@ -118,15 +128,16 @@ class HttpService {
     }
   }
 
-  Future<List<Sleep>> getSleepDiaryByMonth(int userId, int month, int year) async {
+  Future<List<Sleep>> getSleepDiaryByMonth( int month, int year, String token) async {
     var client = http.Client();
     final queryParameters = {
-      'userId' : userId.toString(),
       'month' : month.toString(),
       'year' : year.toString()
     };
     final uri = Uri.https("sleeptracker.azurewebsites.net", '/api/Sleeps/user', queryParameters);
-    var res = await http.get(uri);
+    var res = await client.get(uri,headers: {
+      "Authorization": 'Bearer ' + token,
+    });
     if (res.statusCode == 200){
        return sleepFromJson(res.body);
     }
@@ -137,7 +148,7 @@ class HttpService {
   Future<List<MoodSleep>> getMoodList() async {
     var client = http.Client();
     final uri = Uri.parse(baseUrl + "Moods");
-    var res = await http.get(uri);
+    var res = await client.get(uri);
     if (res.statusCode == 200){
       return moodSleepFromJson(res.body);
     }
@@ -146,8 +157,9 @@ class HttpService {
     }
   }
 
-  Future<bool> AddSleep(String startSleep, String endSleep, String sleepDate, String description, int userId, int moodId) async{
+  Future<bool> AddSleep(String startSleep, String endSleep, String sleepDate, String description, int moodId) async{
     var client = http.Client();
+    String token = await getToken();
     String body = jsonEncode({
       "startHour": int.parse(startSleep.split(":")[0]),
       "startMinute": int.parse(startSleep.split(":")[1]),
@@ -155,12 +167,13 @@ class HttpService {
       "endMinute": int.parse(endSleep.split(":")[1]),
       "slDescription": description,
       "sleepDate": sleepDate,
-      "moodId": moodId,
-      "userId": userId
+      "moodId": moodId
     });
-    var res = await client.post(Uri.parse(baseUrl+"Sleeps"),headers: {'Content-Type': 'application/json'},body: body);
+    var res = await client.post(Uri.parse(baseUrl+"Sleeps"),headers: {
+      'Content-Type': 'application/json',
+      'Authorization' : 'Bearer ' + token
+    },body: body);
     if(res.statusCode == 201){
-      var json = res.body;
       return true;
     }
     else{
@@ -169,8 +182,12 @@ class HttpService {
   }
 
   Future<bool> removeSleep(int sleepId) async{
+    String token = await getToken();
     var client = http.Client();
-    var res = await client.delete(Uri.parse(baseUrl+"Sleeps/"+sleepId.toString()),headers: {'Content-Type': 'application/json'});
+    var res = await client.delete(Uri.parse(baseUrl+"Sleeps/"+sleepId.toString()),headers: {
+      'Content-Type': 'application/json',
+      'Authorization' : 'Bearer ' + token
+    });
     if(res.statusCode == 204){
       return true;
     }

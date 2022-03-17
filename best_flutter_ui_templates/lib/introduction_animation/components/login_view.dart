@@ -3,6 +3,7 @@ import 'package:best_flutter_ui_templates/service/notificationService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'register_view.dart';
 import 'package:best_flutter_ui_templates/home/home_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -172,9 +173,12 @@ class _LoginViewState extends State<LoginView> {
         String tip = await HttpService().getAdvice();
         NotificationService()
             .showNotification(1, "Hi! Here's a tip for better sleep", tip, 4);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("token", user.token);
+        prefs.setString("username", user.username);
         Navigator.of(context).pop();
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
+            MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
         setState(() {
           _isInAsyncCall = false;

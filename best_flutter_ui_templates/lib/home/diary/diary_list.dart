@@ -18,8 +18,9 @@ class DiaryList extends StatefulWidget {
 
 class _DiaryListState extends State<DiaryList> {
   List<Sleep>? listSleep;
-  String? username;
-  int month = 3, year = 2022, userId = 6;
+  int month = 3, year = 2022;
+  String token = "";
+  bool hasToken = false;
   var isLoaded = false;
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
@@ -30,12 +31,19 @@ class _DiaryListState extends State<DiaryList> {
 
   @override
   void initState() {
+    getToken();
     dateinput.text = DateFormat('yyyy-MM').format(DateTime.now());
     setSelectedMonth(int.parse(dateinput.text.split("-")[1]));
     setSelectedYear(int.parse(dateinput.text.split("-")[0]));
-    getUser();
     getDiary();
     super.initState();
+  }
+  getToken() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = pref.getString("token")!;
+      hasToken = true;
+    });
   }
 
   setSelectedMonth(int month) async {
@@ -48,20 +56,12 @@ class _DiaryListState extends State<DiaryList> {
     await prefs.setInt("year", year);
   }
 
-  Future<bool> getUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getInt("id")!;
-      username = prefs.getString("username");
-    });
-    return true;
-  }
-
   Future<bool> getDiary() async {
-    if (await getUser()) {
-      listSleep = await HttpService().getSleepDiaryByMonth(userId, month, year);
+    if(hasToken){
+      listSleep = await HttpService().getSleepDiaryByMonth(month, year,token);
       if (listSleep != null && mounted)
         setState(() {
+          hasToken = false;
           isLoaded = true;
         });
     }
@@ -197,6 +197,9 @@ class _DiaryListState extends State<DiaryList> {
 
   void removeSleep(int sleepId) async {
     bool result = await HttpService().removeSleep(sleepId);
-    if (result) getDiary();
+    if(result)
+      setState(() {
+        hasToken = true;
+      });
   }
 }
