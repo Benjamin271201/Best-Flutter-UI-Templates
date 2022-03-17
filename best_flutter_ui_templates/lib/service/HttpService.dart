@@ -167,6 +167,17 @@ class HttpService {
       return false;
     }
   }
+
+  Future<bool> removeSleep(int sleepId) async{
+    var client = http.Client();
+    var res = await client.delete(Uri.parse(baseUrl+"Sleeps/"+sleepId.toString()),headers: {'Content-Type': 'application/json'});
+    if(res.statusCode == 204){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
   Future<String> getAdvice() async{
     var client = http.Client();
     final uri = Uri.parse(baseUrl + "Quotes/random");

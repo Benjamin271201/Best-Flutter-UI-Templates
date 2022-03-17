@@ -84,53 +84,53 @@ class _DiaryListState extends State<DiaryList> {
             SizedBox(
                 height: 20,
                 child: InkWell(
-                  onTap: () async {
-                    DateTime? pickedDate = await showMonthPicker(
-                      context: context,
-                      initialDate: selectedDate,
-                      firstDate: DateTime(
-                          2000), //DateTime.now() - not to allow to choose before today.
-                      lastDate: DateTime(2101),
-                      locale: null,
-                    );
+                    onTap: () async {
+                      DateTime? pickedDate = await showMonthPicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(
+                            2000), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2101),
+                        locale: null,
+                      );
 
-                    if (pickedDate != null) {
-                      String formattedDate =
-                          DateFormat('yyyy-MM').format(pickedDate);
-                      setState(() {
-                        dateinput.text = formattedDate;
-                        selectedDate = pickedDate;
-                        year = int.parse(formattedDate.split("-")[0]);
-                        month = int.parse(formattedDate.split("-")[1]);
-                      });
-                      getDiary();
-                    }
-                  },
-                  child:
-                  Padding(padding: EdgeInsets.only(left: 25),
-                    child: Row(
-                    children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: Icon(
-                            Icons.calendar_today,
-                            color: HomeTheme.grey,
-                            size: 18,
-                          )),
-                      Text(
-                        dateinput.text,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontFamily: HomeTheme.fontName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 18,
-                          letterSpacing: -0.2,
-                          color: HomeTheme.darkerText,
-                        ),
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormat('yyyy-MM').format(pickedDate);
+                        setState(() {
+                          dateinput.text = formattedDate;
+                          selectedDate = pickedDate;
+                          year = int.parse(formattedDate.split("-")[0]);
+                          month = int.parse(formattedDate.split("-")[1]);
+                        });
+                        getDiary();
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(
+                                Icons.calendar_today,
+                                color: HomeTheme.grey,
+                                size: 18,
+                              )),
+                          Text(
+                            dateinput.text,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: HomeTheme.fontName,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 18,
+                              letterSpacing: -0.2,
+                              color: HomeTheme.darkerText,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ))),
+                    ))),
             SizedBox(
                 height: 500,
                 width: double.infinity,
@@ -169,7 +169,17 @@ class _DiaryListState extends State<DiaryList> {
                                     title: Text("Duration: " +
                                         convertToHours(item.sleepDuration)),
                                     textColor: Colors.green),
-                              )
+                              ),
+                              InkWell(
+                                  onTap: () => removeSleep(item.id),
+                                  child: SizedBox(
+                                      child: Center(
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: Colors.red,
+                                      size: 30,
+                                    ),
+                                  )))
                             ])));
                   },
                 ))
@@ -183,5 +193,10 @@ class _DiaryListState extends State<DiaryList> {
     int hours = sleepTime ~/ 60;
     int mins = sleepTime - (hours * 60);
     return hours.toString() + "h" + mins.toString();
+  }
+
+  void removeSleep(int sleepId) async {
+    bool result = await HttpService().removeSleep(sleepId);
+    if (result) getDiary();
   }
 }

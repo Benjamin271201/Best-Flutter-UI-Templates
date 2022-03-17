@@ -121,7 +121,7 @@ class _AddSleepState extends State<AddSleep> {
                             .parse(pickedTime.format(context).toString());
                         //converting to DateTime so that we can further format on different pattern.
                         String formattedTime =
-                            DateFormat('HH:mm:ss').format(parsedTime);
+                            DateFormat('HH:mm').format(parsedTime);
                         setState(() {
                           startTimeInput.text =
                               formattedTime; //set the value of text field.
@@ -152,7 +152,7 @@ class _AddSleepState extends State<AddSleep> {
                             .parse(pickedTime.format(context).toString());
                         //converting to DateTime so that we can further format on different pattern.
                         String formattedTime =
-                            DateFormat('HH:mm:ss').format(parsedTime);
+                            DateFormat('HH:mm').format(parsedTime);
                         setState(() {
                           endTimeInput.text =
                               formattedTime; //set the value of text field.
