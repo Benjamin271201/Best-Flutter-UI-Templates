@@ -12,45 +12,21 @@ import 'models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/model/user.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
-
-  HomeScreen({required User user}) : this.user = user;
 
   @override
-  _HomeScreenState createState() => _HomeScreenState(user);
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   AnimationController? animationController;
-  final User user;
-  String? username;
-  int? id;
-
-  _HomeScreenState(this.user) {
-    id = user.id;
-    username = user.username;
-  }
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
 
   Widget tabBody = Container(
     color: HomeTheme.background,
   );
-
-  setUsername(String username) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("username", user.username);
-  }
-
-  setUserId(int id) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("id", user.id);
-  }
-
   @override
   void initState() {
-    setUsername(username!);
-    setUserId(id!);
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
     });
@@ -105,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: SizedBox(),
         ),
         BottomBarView(
-            user: user,
             tabIconsList: tabIconsList,
             addClick: () {},
             changeIndex: (int index) {
@@ -149,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       return;
                     }
                     setState(() {
-                      tabBody = ProfileScreen(user: user);
+                      tabBody = ProfileScreen();
                     });
                   });
                   break;

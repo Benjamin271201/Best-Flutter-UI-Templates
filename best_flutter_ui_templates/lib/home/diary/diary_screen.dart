@@ -24,6 +24,7 @@ class _DiaryScreenState extends State<DiaryScreen>
 
   List<Sleep>? listSleep;
   String? username;
+  String token = "";
   int month = 0, year = 0, userId = 6;
   var isLoaded = false;
   List<Widget> listViews = <Widget>[];
@@ -65,6 +66,8 @@ class _DiaryScreenState extends State<DiaryScreen>
     super.initState();
   }
 
+
+
   void addAllListData() {
     const int count = 1;
     listViews.add(DiaryList());
@@ -75,18 +78,16 @@ class _DiaryScreenState extends State<DiaryScreen>
     return true;
   }
 
-  Future<bool> getUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  getToken() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      userId = prefs.getInt("id")!;
-      username = prefs.getString("username");
+      token = pref.getString("token")!;
     });
-    return true;
   }
 
   Future<bool> getDiary() async {
-    if (await getUser()) {
-      listSleep = await HttpService().getSleepDiaryByMonth(userId, month, year);
+    if (await getToken()) {
+      listSleep = await HttpService().getSleepDiaryByMonth(month, year, token);
       if (listSleep != null && mounted)
         setState(() {
           isLoaded = true;

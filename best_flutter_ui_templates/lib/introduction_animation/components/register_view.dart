@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:best_flutter_ui_templates/home/home_screen.dart';
@@ -207,7 +206,7 @@ class _RegisterViewState extends State<RegisterView> {
         Navigator.of(context).pop();
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => HomeScreen(user: user)));
+                builder: (context) => HomeScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Username already exist")));

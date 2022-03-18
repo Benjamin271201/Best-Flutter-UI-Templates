@@ -21,7 +21,7 @@ class MoodChartState extends State {
   int touchedIndex = -1;
   int month = 0, year = 0, userId = 6;
   List<Mood> moodStatusList = [];
-  bool _isInAsyncCall = true;
+  String token = "";
   TextEditingController dateinput = TextEditingController();
   DateTime selectedDate = DateTime.now();
 
@@ -29,8 +29,16 @@ class MoodChartState extends State {
   void initState() {
     super.initState();
     dateinput.text = DateFormat('yyyy-MM').format(DateTime.now());
+    getToken();
     getMoodStatus();
     getSelectedMonthYear();
+  }
+
+  getToken() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = pref.getString("token")!;
+    });
   }
 
   @override
@@ -174,7 +182,7 @@ class MoodChartState extends State {
 
   Future<bool> getMoodStatus() async {
     Future.delayed(const Duration(milliseconds: 300), () async {
-      var list = await HttpService().getMoodStatByMonth(userId, month, year);
+      var list = await HttpService().getMoodStatByMonth(month, year, token);
       if (list.isNotEmpty && mounted)
         setState(() {
           moodStatusList = list;

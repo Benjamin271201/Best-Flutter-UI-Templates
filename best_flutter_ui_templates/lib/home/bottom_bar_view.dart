@@ -10,24 +10,19 @@ import '../../main.dart';
 import 'models/tabIcon_data.dart';
 
 class BottomBarView extends StatefulWidget {
-  final User user;
   const BottomBarView(
-      {this.tabIconsList, this.changeIndex, this.addClick, required User user})
-      : this.user = user;
+      {this.tabIconsList, this.changeIndex, this.addClick});
 
   final Function(int index)? changeIndex;
   final Function()? addClick;
   final List<TabIconData>? tabIconsList;
   @override
-  _BottomBarViewState createState() => _BottomBarViewState(user);
+  _BottomBarViewState createState() => _BottomBarViewState();
 }
 
 class _BottomBarViewState extends State<BottomBarView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
-  final User user;
-
-  _BottomBarViewState(this.user);
   @override
   void initState() {
     animationController = AnimationController(
@@ -175,7 +170,7 @@ class _BottomBarViewState extends State<BottomBarView>
                           splashColor: Colors.white.withOpacity(0.1),
                           highlightColor: Colors.transparent,
                           focusColor: Colors.transparent,
-                          onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => AddSleep(user: user)))},
+                          onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => AddSleep()))},
                           child: Icon(
                             Icons.add,
                             color: HomeTheme.white,

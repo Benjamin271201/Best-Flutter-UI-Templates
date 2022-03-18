@@ -16,14 +16,22 @@ class _AverageSleepState extends State<AverageSleep> {
   int month = 0, year = 0, userId = 6;
   String avgSleep = "";
   String totalSleep = "";
+  String token = "";
   TextEditingController dateinput = TextEditingController();
   DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+    getToken();
     dateinput.text = DateFormat('yyyy-MM').format(DateTime.now());
     getSelectedMonthYear();
+  }
+  getToken() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = pref.getString("token")!;
+    });
   }
 
   @override
@@ -153,9 +161,9 @@ class _AverageSleepState extends State<AverageSleep> {
 
   void getSleepStats() async {
     double tmpDaily =
-        await HttpService().getAvgSleepByMonth(userId, month, year);
+        await HttpService().getAvgSleepByMonth(month, year,token);
     double tmpTotal =
-        await HttpService().getTotalSleepByMonth(userId, month, year);
+        await HttpService().getTotalSleepByMonth(month, year,token);
     convertToHours(tmpDaily, tmpTotal);
   }
 

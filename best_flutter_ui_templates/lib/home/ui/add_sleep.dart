@@ -1,23 +1,16 @@
-import 'package:best_flutter_ui_templates/model/moodSleep.dart';
 import 'package:best_flutter_ui_templates/service/HttpService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-import '../../model/user.dart';
 import '../home_screen.dart';
 
 class AddSleep extends StatefulWidget {
-  final User user;
-
-  AddSleep({required User user}) : this.user = user;
-
   @override
-  State<AddSleep> createState() => _AddSleepState(user);
+  State<AddSleep> createState() => _AddSleepState();
 }
 
 class _AddSleepState extends State<AddSleep> {
-  final User user;
   TextEditingController startTimeInput = TextEditingController();
   TextEditingController endTimeInput = TextEditingController();
   TextEditingController description = TextEditingController();
@@ -26,7 +19,6 @@ class _AddSleepState extends State<AddSleep> {
   var dropdown;
   List moodList = [];
 
-  _AddSleepState(this.user);
 
   @override
   void initState() {
@@ -43,7 +35,6 @@ class _AddSleepState extends State<AddSleep> {
       setState(() {
         moodList = res;
         _isInAsyncCall = false;
-        print(moodList);
       });
     }
   }
@@ -56,7 +47,7 @@ class _AddSleepState extends State<AddSleep> {
       _isInAsyncCall = true;
     });
     bool res = await HttpService().AddSleep(startTimeInput.text,
-        endTimeInput.text, dateInput.text, description.text, user.id, dropdown);
+        endTimeInput.text, dateInput.text, description.text, dropdown);
     if (res) {
       showDialog(
         context: context,
@@ -70,7 +61,7 @@ class _AddSleepState extends State<AddSleep> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
                 },
               ),
             ],
