@@ -1,4 +1,3 @@
-import 'package:best_flutter_ui_templates/home/diary/diary_list.dart';
 import 'package:best_flutter_ui_templates/home/diary/sleep.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +5,6 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../../service/HttpService.dart';
 import '../home_screen.dart';
-import '../home_theme.dart';
 
 class SleepDetail extends StatefulWidget {
   final Sleep sleep;
@@ -326,8 +324,9 @@ class _SleepDetailState extends State<SleepDetail> {
               new TextButton(
                 child: const Text("OK"),
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => DiaryList()));
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
                 },
               ),
             ],

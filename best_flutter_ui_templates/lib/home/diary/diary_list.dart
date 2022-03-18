@@ -215,8 +215,6 @@ class _DiaryListState extends State<DiaryList> {
                     isLoaded = false;
                   });
                   Navigator.of(context).pop();
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => DiaryList()));
                 }
               },
             ),

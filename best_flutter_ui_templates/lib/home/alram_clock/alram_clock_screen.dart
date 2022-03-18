@@ -128,18 +128,18 @@ class _AlarmClockState extends State<AlarmClock> with TickerProviderStateMixin {
   }
 
   Widget getCurrentTimeUI() {
-    return 
-      Padding(padding: EdgeInsets.only(top: 50, bottom: 20),
+    return Padding(
+        padding: EdgeInsets.only(top: 50, bottom: 20),
         child: Center(
-        child: StreamBuilder(
-            stream: Stream.periodic(const Duration(seconds: 1)),
-            builder: (context, snapshot) {
-              return Text(
-                "Current time: " +
-                    DateFormat('HH:mm:ss').format(DateTime.now()),
-                style: TextStyle(fontSize: 30),
-              );
-            })));
+            child: StreamBuilder(
+                stream: Stream.periodic(const Duration(seconds: 1)),
+                builder: (context, snapshot) {
+                  return Text(
+                    "Current time: " +
+                        DateFormat('HH:mm:ss').format(DateTime.now()),
+                    style: TextStyle(fontSize: 30),
+                  );
+                })));
   }
 
   void _selectTime() async {
