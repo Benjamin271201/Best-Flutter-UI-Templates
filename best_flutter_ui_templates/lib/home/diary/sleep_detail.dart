@@ -1,3 +1,4 @@
+import 'package:best_flutter_ui_templates/home/diary/diary_list.dart';
 import 'package:best_flutter_ui_templates/home/diary/sleep.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -68,7 +69,11 @@ class _SleepDetailState extends State<SleepDetail> {
                     true, //set it true, so that user will not able to edit text
                     onTap: () async {
                       TimeOfDay? pickedTime = await showTimePicker(
-                        initialTime: TimeOfDay.now(),
+                        initialTime: TimeOfDay(
+                            hour: int.parse(
+                                widget.sleep.startSleep.split(":")[0]),
+                            minute: int.parse(
+                                widget.sleep.startSleep.split(":")[1])),
                         context: context,
                       );
                       if (pickedTime != null) {
@@ -99,7 +104,11 @@ class _SleepDetailState extends State<SleepDetail> {
                     true, //set it true, so that user will not able to edit text
                     onTap: () async {
                       TimeOfDay? pickedTime = await showTimePicker(
-                        initialTime: TimeOfDay.now(),
+                        initialTime: TimeOfDay(
+                            hour: int.parse(
+                                widget.sleep.endSleep.split(":")[0]),
+                            minute: int.parse(
+                                widget.sleep.endSleep.split(":")[1])),
                         context: context,
                       );
                       if (pickedTime != null) {
