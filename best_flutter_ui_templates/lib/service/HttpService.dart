@@ -230,4 +230,20 @@ class HttpService {
       return false;
     }
   }
+  Future<bool> changePass(String oldPass, String newPass) async{
+    var client = http.Client();
+    String token = await getToken();
+    String body = json.encode({
+      "oldPass" : oldPass,
+      "newPass" : newPass
+    });
+    var res = await client.put(Uri.parse(baseUrl+"Users/password"),headers: {
+      'Content-Type': 'application/json',
+      'Authorization' : 'Bearer ' + token
+    },body: body);
+    if(res.statusCode == 204){
+      return true;
+    }
+    return false;
+  }
 }
