@@ -104,6 +104,8 @@ class _DiaryListState extends State<DiaryList> {
                           selectedDate = pickedDate;
                           year = int.parse(formattedDate.split("-")[0]);
                           month = int.parse(formattedDate.split("-")[1]);
+                          hasToken = true;
+                          isLoaded = false;
                         });
                         getDiary();
                       }
