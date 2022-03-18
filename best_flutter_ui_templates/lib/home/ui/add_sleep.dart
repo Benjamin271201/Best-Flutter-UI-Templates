@@ -35,7 +35,6 @@ class _AddSleepState extends State<AddSleep> {
       setState(() {
         moodList = res;
         _isInAsyncCall = false;
-        print(moodList);
       });
     }
   }

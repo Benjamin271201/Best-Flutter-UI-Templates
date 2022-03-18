@@ -206,4 +206,28 @@ class HttpService {
     }
     return "";
   }
+
+  Future<bool> updateSleep(String startSleep, String endSleep, String sleepDate, String description, int moodId,int id) async{
+    var client = http.Client();
+    String token = await getToken();
+    String body = jsonEncode({
+      "startHour": int.parse(startSleep.split(":")[0]),
+      "startMinute": int.parse(startSleep.split(":")[1]),
+      "endHour": int.parse(endSleep.split(":")[0]),
+      "endMinute": int.parse(endSleep.split(":")[1]),
+      "slDescription": description,
+      "sleepDate": sleepDate,
+      "moodId": moodId
+    });
+    var res = await client.put(Uri.parse(baseUrl+"Sleeps/"+id.toString()),headers: {
+      'Content-Type': 'application/json',
+      'Authorization' : 'Bearer ' + token
+    },body: body);
+    if(res.statusCode == 204){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 }

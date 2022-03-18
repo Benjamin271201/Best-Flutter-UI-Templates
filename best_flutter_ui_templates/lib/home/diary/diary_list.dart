@@ -7,6 +7,7 @@ import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/HttpService.dart';
+import '../home_screen.dart';
 import '../home_theme.dart';
 
 class DiaryList extends StatefulWidget {
@@ -38,7 +39,8 @@ class _DiaryListState extends State<DiaryList> {
     getDiary();
     super.initState();
   }
-  getToken() async{
+
+  getToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       token = pref.getString("token")!;
@@ -57,8 +59,8 @@ class _DiaryListState extends State<DiaryList> {
   }
 
   Future<bool> getDiary() async {
-    if(hasToken){
-      listSleep = await HttpService().getSleepDiaryByMonth(month, year,token);
+    if (hasToken) {
+      listSleep = await HttpService().getSleepDiaryByMonth(month, year, token);
       if (listSleep != null && mounted)
         setState(() {
           hasToken = false;
@@ -196,10 +198,36 @@ class _DiaryListState extends State<DiaryList> {
   }
 
   void removeSleep(int sleepId) async {
-    bool result = await HttpService().removeSleep(sleepId);
-    if(result)
-      setState(() {
-        hasToken = true;
-      });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Warning"),
+          content: Text("Do you want to delete this record?"),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text("OK"),
+              onPressed: () async {
+                bool result = await HttpService().removeSleep(sleepId);
+                if (result) {
+                  setState(() {
+                    hasToken = true;
+                    isLoaded = false;
+                  });
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => DiaryList()));
+                }
+              },
+            ),
+            new TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Cancel"))
+          ],
+        );
+      },
+    );
   }
 }
